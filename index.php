@@ -1,4 +1,15 @@
 <?php
+/*
+ * 301 to strip common cache-busting query parameter to avoid passing bogus parameters to bridges
+ */
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$pos = strpos($url, "_");
+if ($pos != false) {
+  $url = substr($url, 0, $pos);
+  header('Location: '.$url);
+  die();
+}
+
 require_once __DIR__ . '/lib/rssbridge.php';
 
 Configuration::verifyInstallation();
